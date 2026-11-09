@@ -1,0 +1,50 @@
+# ---- secrets: never commit ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.tfvars
+*.tfstate
+*.tfstate.*
+secrets/
+credentials/
+
+# ---- local data, databases, logs ----
+*.db
+*.sqlite
+*.sqlite3
+data/
+logs/
+workspaces/
+.terraform/
+
+# ---- python ----
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.coverage
+htmlcov/
+
+# ---- node / build output ----
+node_modules/
+dist/
+build/
+out/
+
+# ---- tooling, local-only ----
+.claude/
+skills-lock.json
+.DS_Store
+Thumbs.db
+
+# ---- old code kept locally, not part of the project ----
+_legacy/
+
+# ---- promo video: Remotion has its own licence terms for companies, so it lives outside this repo ----
+repo-office/promo/
+
+# ---- load-test output ----
+repo-meta-observability/meta-observability/data/loadtests/

@@ -1,0 +1,29 @@
+name: Bug report
+description: Something does not work as described
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: "Exact commands. Does it also happen with `--dev-auth --stub`?"
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "OS, Python version, Terraform version (if relevant)"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: "Paste relevant lines from repo-office/logs/*.log. Remove any keys or tokens first."
+      render: text

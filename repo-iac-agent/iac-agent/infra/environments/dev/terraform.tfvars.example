@@ -1,0 +1,12 @@
+# Copy to terraform.tfvars (gitignored) and fill in what you actually need.
+# Most people should leave the aws_* auth variables commented out entirely
+# and use an AWS CLI profile or env vars instead — see providers.tf's
+# header comment for why.
+
+# aws_region   = "ap-south-1"
+# project_name = "chatbot-agent"
+
+# --- Only if not using a profile or env vars (not recommended, see providers.tf) ---
+# aws_profile     = "my-profile-name"
+# aws_access_key  = "AKIA..."
+# aws_secret_key  = "..."

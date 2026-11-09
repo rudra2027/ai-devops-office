@@ -1,0 +1,68 @@
+{
+  "format_version": "1.2",
+  "terraform_version": "1.9.0",
+  "resource_drift": [
+    {
+      "address": "aws_security_group.frontend_tasks",
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "frontend_tasks",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["update"],
+        "before": {"name": "chatbot-agent-frontend-tasks", "description": "managed by terraform"},
+        "after": {"name": "chatbot-agent-frontend-tasks", "description": "modified outside terraform"}
+      }
+    }
+  ],
+  "resource_changes": [
+    {
+      "address": "aws_s3_bucket.model_artifacts",
+      "mode": "managed",
+      "type": "aws_s3_bucket",
+      "name": "model_artifacts",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["update"],
+        "before": {"tags": {"env": "dev"}},
+        "after": {"tags": {"env": "dev", "owner": "alex"}}
+      }
+    },
+    {
+      "address": "aws_ecs_service.frontend",
+      "mode": "managed",
+      "type": "aws_ecs_service",
+      "name": "frontend",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["update"],
+        "before": {"desired_count": 2},
+        "after": {"desired_count": 3}
+      }
+    },
+    {
+      "address": "aws_dynamodb_table.iac_findings",
+      "mode": "managed",
+      "type": "aws_dynamodb_table",
+      "name": "iac_findings",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["delete"],
+        "before": {"name": "chatbot-agent-iac-findings"},
+        "after": null
+      }
+    },
+    {
+      "address": "aws_lb_target_group.frontend",
+      "mode": "managed",
+      "type": "aws_lb_target_group",
+      "name": "frontend",
+      "provider_name": "registry.terraform.io/hashicorp/aws",
+      "change": {
+        "actions": ["no-op"],
+        "before": {"name": "chatbot-agent-frontend-tg"},
+        "after": {"name": "chatbot-agent-frontend-tg"}
+      }
+    }
+  ]
+}

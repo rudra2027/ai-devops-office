@@ -1,0 +1,8 @@
+# Copy to backend.hcl (gitignored) and fill in the real values printed by
+# `terraform apply` in infra/bootstrap/.
+#
+# bucket         = "chatbot-agent-tfstate-<your-account-id>"
+# key            = "dev/terraform.tfstate"
+# region         = "ap-south-1"
+# dynamodb_table = "chatbot-agent-tfstate-lock"
+# encrypt        = true

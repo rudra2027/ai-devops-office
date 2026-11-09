@@ -1,0 +1,65 @@
+# EKS Auto Mode NodePool/NodeClass for GPU workloads (LLM serving via
+# vLLM/TGI — Phase 3). Apply this against the LLM CLUSTER specifically —
+# with two clusters now (see environments/dev/main.tf: eks_llm vs
+# eks_app), make sure your kubeconfig context is pointed at the LLM
+# cluster before running this, not the app cluster. These are Kubernetes
+# custom resources, not AWS API resources, so kubectl/ArgoCD applies them
+# — not part of the Terraform apply.
+#
+# Apply with:
+#   aws eks update-kubeconfig --name <llm_cluster_name output> --region <region>
+#   kubectl apply -f gpu-nodepool.yaml
+#
+# `role:` below should be the LLM cluster's node role name — Terraform
+# outputs it as llm_cluster_node_role_name.
+
+apiVersion: eks.amazonaws.com/v1
+kind: NodeClass
+metadata:
+  name: gpu-nodeclass
+spec:
+  role: <node-role-name-from-terraform-output>
+  subnetSelectorTerms:
+    - tags:
+        kubernetes.io/role/internal-elb: "1"
+  securityGroupSelectorTerms:
+    - tags:
+        Name: "*-eks-node-sg"
+
+---
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: gpu-pool
+spec:
+  template:
+    metadata:
+      labels:
+        workload-type: gpu-inference
+    spec:
+      nodeClassRef:
+        group: eks.amazonaws.com
+        kind: NodeClass
+        name: gpu-nodeclass
+      requirements:
+        - key: node.kubernetes.io/instance-type
+          operator: In
+          values: ["g5.xlarge", "g5.2xlarge"]
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["on-demand"]
+      # Taint so only pods that explicitly tolerate GPU nodes land here —
+      # keeps the frontend/agent pods (which don't need GPU) off this
+      # more expensive pool.
+      taints:
+        - key: nvidia.com/gpu
+          value: "true"
+          effect: NoSchedule
+  limits:
+    cpu: "16"
+  disruption:
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    # Scale to zero when idle — accept cold-start latency in exchange for
+    # not paying for idle GPU capacity. Revisit if cold starts prove too
+    # slow for real traffic (see build guide's "open decisions" section).
+    consolidateAfter: 5m
